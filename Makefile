@@ -1,7 +1,7 @@
 up:
 	./gradlew build
 	docker-compose up -d --build
-
+	make logs
 logs:
 	docker-compose logs -f
 
