@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: default
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.database/var:/var/lib/mysql
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: thiagocordeiro-scheduler
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      API_KEY: "compose-softgarden-scheduler-api-key"
+      JDBC_READ_URL: "jdbc:mysql://mysql:3306/default?user=root&password=root"
+      JDBC_WRITE_URL: "jdbc:mysql://mysql:3306/default?user=root&password=root"
+    depends_on:
+      - "mysql"
+#      - "datadog"
